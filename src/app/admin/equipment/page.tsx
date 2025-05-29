@@ -67,50 +67,7 @@ export default function EquipmentPage() {
     }
   }
 
-  const togglePublic = async (id: number, currentStatus: boolean) => {
-    try {
-      const response = await fetch(`/api/equipment/${id}/visibility`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ isPublic: !currentStatus }),
-      })
-
-      if (!response.ok) {
-        throw new Error('공개 상태 변경에 실패했습니다')
-      }
-
-      toast.success('공개 상태가 변경되었습니다')
-      fetchData()
-    } catch (error) {
-      console.error('공개 상태 변경 중 오류:', error)
-      toast.error('공개 상태 변경에 실패했습니다')
-    }
-  }
-
-  const handleStatusChange = async (id: number, newStatus: string) => {
-    try {
-      const response = await fetch(`/api/equipment/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      })
-
-      if (!response.ok) {
-        throw new Error('상태 변경에 실패했습니다')
-      }
-
-      toast.success('기자재 상태가 변경되었습니다')
-      fetchData()
-    } catch (error) {
-      console.error('상태 변경 중 오류:', error)
-      toast.error('상태 변경에 실패했습니다')
-    }
-  }
-
+  
   const handleDelete = async (id: number) => {
     if (!confirm('정말로 이 기자재를 삭제하시겠습니까?')) {
       return

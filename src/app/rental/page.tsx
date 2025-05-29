@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
 import { toast, Toaster } from 'react-hot-toast'
 
 interface Rental {

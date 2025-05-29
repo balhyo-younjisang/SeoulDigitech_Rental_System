@@ -6,21 +6,6 @@ import { usePathname } from 'next/navigation'
 export default function Header() {
   const pathname = usePathname()
   
-  const getPageTitle = () => {
-    switch (pathname) {
-      case '/':
-        return '홈'
-      case '/equipment':
-        return '기자재 목록'
-      case '/rental':
-        return '대여 현황'
-      case '/rental/apply':
-        return '대여 신청'
-      default:
-        return '서울디지텍고등학교 기자재 대여 시스템'
-    }
-  }
-
   return (
     <header className="bg-white shadow-md">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
