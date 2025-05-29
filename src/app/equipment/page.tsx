@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { toast, Toaster } from 'react-hot-toast'
+import Image from 'next/image'
 
 interface Category {
   id: number
@@ -112,11 +113,13 @@ export default function EquipmentPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredEquipment.map((equipment) => (
             <div key={equipment.id} className="bg-white rounded-lg shadow-md overflow-hidden">
-              <div className="aspect-w-16 aspect-h-9 bg-gray-200">
-                <img
+              <div className="relative h-48">
+                <Image
                   src={equipment.image}
                   alt={equipment.name}
-                  className="object-cover w-full h-full"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                 />
               </div>
               <div className="p-6">

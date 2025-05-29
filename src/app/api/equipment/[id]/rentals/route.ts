@@ -1,14 +1,16 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const id = await (await params).id
+
     const rentals = await prisma.rental.findMany({
       where: {
-        equipmentId: parseInt(params.id)
+        equipmentId: parseInt(id)
       },
       include: {
         equipment: {
@@ -25,9 +27,9 @@ export async function GET(
 
     return NextResponse.json(rentals)
   } catch (error) {
-    console.error('대여 현황 조회 중 오류:', error)
+    console.error('대여 내역 조회 중 오류:', error)
     return NextResponse.json(
-      { error: '대여 현황 조회에 실패했습니다' },
+      { error: '대여 내역 조회 중 오류가 발생했습니다' },
       { status: 500 }
     )
   }

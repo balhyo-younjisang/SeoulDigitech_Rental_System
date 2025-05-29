@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { toast, Toaster } from 'react-hot-toast'
+import Image from 'next/image'
 
 interface Equipment {
   id: number
@@ -76,11 +77,14 @@ export default function HomePage() {
               key={item.id}
               className="bg-white rounded-lg shadow-md overflow-hidden"
             >
-              <div className="relative h-48">
-                <img
+              <div className="relative h-64">
+                <Image
                   src={item.image}
                   alt={item.name}
-                  className="w-full h-full object-cover"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  priority
                 />
                 <div className="absolute top-4 right-4">
                   <span

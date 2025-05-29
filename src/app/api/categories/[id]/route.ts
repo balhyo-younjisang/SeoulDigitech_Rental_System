@@ -3,11 +3,14 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const category = await prisma.category.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(await (await params).id) },
+      include: {  
+        equipment: true
+      }
     })
 
     if (!category) {
@@ -29,22 +32,18 @@ export async function GET(
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const body = await request.json()
-    const { name } = body
-
-    if (!name) {
-      return NextResponse.json(
-        { error: '카테고리 이름은 필수입니다' },
-        { status: 400 }
-      )
-    }
+    const { name, description } = body
 
     const category = await prisma.category.update({
-      where: { id: parseInt(params.id) },
-      data: { name },
+      where: { id: parseInt(await (await params).id) },
+      data: {
+        name,
+        description
+      }
     })
 
     return NextResponse.json(category)
@@ -59,11 +58,11 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     await prisma.category.delete({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(await (await params).id) }
     })
 
     return NextResponse.json({ message: '카테고리가 삭제되었습니다' })

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect, useCallback, use } from 'react'
 import { toast, Toaster } from 'react-hot-toast'
 import Link from 'next/link'
 
@@ -40,11 +40,7 @@ export default function EquipmentRentalsPage({ params }: { params: Promise<{ id:
     searchTerm: ''
   })
 
-  useEffect(() => {
-    fetchData()
-  }, [resolvedParams.id])
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true)
       const [equipmentRes, rentalsRes] = await Promise.all([
@@ -73,7 +69,11 @@ export default function EquipmentRentalsPage({ params }: { params: Promise<{ id:
     } finally {
       setLoading(false)
     }
-  }
+  }, [resolvedParams.id])
+
+  useEffect(() => {
+    fetchData()
+  }, [fetchData])
 
   const handleStatusChange = async (rentalId: number, newStatus: string) => {
     try {

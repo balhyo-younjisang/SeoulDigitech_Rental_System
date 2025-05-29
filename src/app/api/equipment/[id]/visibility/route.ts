@@ -1,16 +1,16 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export async function PUT(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const id = parseInt(params.id)
+    const id = await (await params).id
     const { isPublic } = await request.json()
 
     const updatedEquipment = await prisma.equipment.update({
-      where: { id },
+      where: { id: parseInt(id) },
       data: { isPublic },
     })
 

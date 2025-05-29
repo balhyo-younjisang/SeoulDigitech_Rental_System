@@ -1,11 +1,11 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
 export async function POST(
-  request: Request,
-  { params }: { params: { id: string } }
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
 ) {
-  const rentalId = parseInt(params.id)
+  const rentalId = parseInt(await (await params).id)
 
   if (isNaN(rentalId)) {
     return NextResponse.json(
