@@ -1,27 +1,76 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-export async function PUT(
-  request: Request,
+export async function GET(
+  request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const id = parseInt(params.id)
-    const data = await request.json()
+    const category = await prisma.category.findUnique({
+      where: { id: parseInt(params.id) },
+    })
+
+    if (!category) {
+      return NextResponse.json(
+        { error: '카테고리를 찾을 수 없습니다' },
+        { status: 404 }
+      )
+    }
+
+    return NextResponse.json(category)
+  } catch (error) {
+    console.error('카테고리 조회 중 오류:', error)
+    return NextResponse.json(
+      { error: '카테고리 조회 중 오류가 발생했습니다' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const body = await request.json()
+    const { name } = body
+
+    if (!name) {
+      return NextResponse.json(
+        { error: '카테고리 이름은 필수입니다' },
+        { status: 400 }
+      )
+    }
 
     const category = await prisma.category.update({
-      where: { id },
-      data: {
-        name: data.name,
-        description: data.description,
-      },
+      where: { id: parseInt(params.id) },
+      data: { name },
     })
 
     return NextResponse.json(category)
   } catch (error) {
     console.error('카테고리 수정 중 오류:', error)
     return NextResponse.json(
-      { error: '카테고리 수정에 실패했습니다' },
+      { error: '카테고리 수정 중 오류가 발생했습니다' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await prisma.category.delete({
+      where: { id: parseInt(params.id) },
+    })
+
+    return NextResponse.json({ message: '카테고리가 삭제되었습니다' })
+  } catch (error) {
+    console.error('카테고리 삭제 중 오류:', error)
+    return NextResponse.json(
+      { error: '카테고리 삭제 중 오류가 발생했습니다' },
       { status: 500 }
     )
   }
