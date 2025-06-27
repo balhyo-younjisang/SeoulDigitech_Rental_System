@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { Transaction } from '@prisma/client'
+import type { Prisma } from '@prisma/client';
+type TxClient = Prisma.TransactionClient;
 
 // 대여 정보 조회
 export async function GET(request: Request) {
@@ -79,7 +80,7 @@ export async function POST(request: Request) {
     const data = await request.json()
 
     // 트랜잭션 시작
-    const result = await prisma.$transaction(async (tx : Transaction) => {
+    const result = await prisma.$transaction(async (tx : TxClient) => {
       // 1. 기자재 재고 확인
       const equipment = await tx.equipment.findUnique({
         where: { id: data.equipmentId },
